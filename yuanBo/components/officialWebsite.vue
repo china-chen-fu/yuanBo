@@ -66,9 +66,11 @@
                     </div>
                     <div class="tab-bar-container">
                         <template v-for="(item, index) in serviceScopeTabData">
-                            <div class="item" :class="index == serviceScopeTabIndex ? 'active' : ''">
-                                <img :src="`/_nuxt/assets/image/${item.imgURL}${serviceScopeTabIndex == index ? '-active' : ''}.png`"
-                                    alt="">
+                            <div class="item" :class="index == serviceScopeTabIndex ? 'active' : ''" @click="serviceScopeTabIndexChange(index)">
+                                <div class="image-container">
+                                    <img :src="`/_nuxt/assets/image/${item.imgURL}${serviceScopeTabIndex == index ? '-active' : ''}.png`"
+                                        alt="">
+                                </div>
                                 <span>{{ item.describe }}</span>
                             </div>
                         </template>
@@ -107,11 +109,11 @@
         <div class="solution">
             <div class="main">
                 <div class="tab-bar">
-                   <template v-for="(item,index) in solutionTabData">
-                    <div :class="index==solutionTabIndex?'active':''">
-                       {{item}} 
-                    </div>
-                   </template>
+                    <template v-for="(item, index) in solutionTabData">
+                        <div :class="index == solutionTabIndex ? 'active' : ''">
+                            {{ item }}
+                        </div>
+                    </template>
                 </div>
 
                 <div class="tab-container">
@@ -461,6 +463,12 @@
     </div>
 </template>
 <script setup>
+  if (process.browser) { // 在这里根据环境引入wow.js
+    const {WOW} = require('wowjs')
+  }
+
+
+
 //header
 const headerDataIndex = 0
 const headerData = ['产品应用', '平台介绍', '服务支持', '关于鼋博', '加入我们']
@@ -484,7 +492,11 @@ const carouselBottomData = [
 ]
 
 //service-scope
-const serviceScopeTabIndex = 3
+const serviceScopeTabIndex = ref(3)
+const serviceScopeTabIndexChange=(payload)=>{
+    serviceScopeTabIndex.value=payload
+}
+
 const serviceScopeTabData = [{
     imgURL: 'service-scope/data-visualization',
     describe: '数据可视化',
@@ -513,8 +525,8 @@ const serviceScopeTabData = [{
 ]
 
 //solution
-const solutionTabIndex=7
-const solutionTabData=['智能电表','智能电表','敏捷网关','路灯控制','灯光控制','湿度监测','湿度监测','智能硬件']
+const solutionTabIndex = 7
+const solutionTabData = ['智能电表', '智能电表', '敏捷网关', '路灯控制', '灯光控制', '湿度监测', '湿度监测', '智能硬件']
 
 //data-presentation
 const dataPresentation = [
@@ -822,10 +834,18 @@ $main-width: 1200px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
+                        transition: all 2s ease-in-out 0s;
 
-                        img {
+
+                        .image-container {
                             width: 48px;
                             height: 48px;
+                            overflow: hidden;
+
+                            img {
+                                width: 48px;
+                                height: 48px;
+                            }
                         }
 
                         span {
@@ -837,6 +857,13 @@ $main-width: 1200px;
                             font-weight: 400;
                             color: #18191A;
                             line-height: 23px;
+                        }
+                    }
+
+                    .item:hover{
+                        cursor: pointer;
+                        img{
+                            transform: scale(1.1);
                         }
                     }
 
@@ -951,7 +978,6 @@ $main-width: 1200px;
             padding-bottom: 87px;
 
             .tab-bar {
-                width: 140px;
                 height: 463px;
                 border-right: 1px solid #BCC2CA;
                 display: flex;
@@ -984,47 +1010,43 @@ $main-width: 1200px;
             }
 
             .tab-container {
-                padding-left: 69px;
+                padding-left: 79px;
 
                 .content {
-                    width: 535px;
+                    width: 580px;
                     border-bottom: 1px solid #9FA0A0;
 
                     .title {
-                        height: 29px;
-                        padding-top: 22px;
-                        padding-bottom: 23px;
-                        font-size: 25px;
+                        height: 41px;
+                        padding-top: 25px;
+                        padding-bottom: 24px;
+                        font-size: 28px;
                         font-family: Source Han Sans CN-Medium, Source Han Sans CN;
                         font-weight: 500;
                         color: #18191A;
-                        line-height: 29px;
+                        line-height: 41px;
                     }
 
                     .cutting-line {
-                        width: 35px;
+                        width: 40px;
                         height: 3px;
-
                         background: #2F3133;
-                        border-radius: 0px 0px 0px 0px;
-                        opacity: 1;
                     }
 
                     .introduce {
-                        height: 25px;
-                        margin-top: 42px;
-                        font-size: 21px;
+                        height: 35px;
+                        margin-top: 48px;
+                        font-size: 24px;
                         font-family: Source Han Sans CN-Regular, Source Han Sans CN;
                         font-weight: 400;
                         color: #8645FF;
-                        line-height: 25px;
-
+                        line-height: 35px;
                     }
 
                     .describe-box {
                         width: 400px;
-                        height: 60px;
-                        margin-top: 18px;
+                        height: 68px;
+                        margin-top: 20px;
                         display: flex;
                         flex-wrap: wrap;
 
@@ -1033,48 +1055,44 @@ $main-width: 1200px;
                             align-items: center;
 
                             .dot {
-                                width: 5px;
-                                height: 5px;
+                                width: 6px;
+                                height: 6px;
                                 border-radius: 50%;
                                 background: #8D9094;
                             }
 
                             .text {
-                                height: 18px;
-                                margin-left: 11px;
-                                margin-right: 70px;
-                                font-size: 16px;
+                                height: 26px;
+                                margin-left: 10px;
+                                margin-right: 80px;
+                                font-size: 18px;
                                 font-family: Source Han Sans CN-Regular, Source Han Sans CN;
                                 font-weight: 400;
                                 color: #8D9094;
-                                line-height: 18px;
+                                line-height: 26px;
 
                             }
                         }
                     }
 
                     .detail {
-                        width: 88px;
-                        height: 28px;
-                        margin-top: 42px;
-                        margin-bottom: 42px;
+                        width: 100px;
+                        height: 32px;
+                        margin-top: 48px;
+                        margin-bottom: 48px;
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        border-radius: 44px 44px 44px 44px;
-                        opacity: 1;
+                        border-radius: 50px 50px 50px 50px;
                         border: 1px solid #8645FF;
 
-
                         span {
-
-                            height: 14px;
-                            font-size: 12px;
+                            height: 20px;
+                            font-size: 14px;
                             font-family: Source Han Sans CN-Regular, Source Han Sans CN;
                             font-weight: 400;
                             color: #8645FF;
-                            line-height: 14px;
-
+                            line-height: 20px;
                         }
                     }
 
@@ -1082,29 +1100,29 @@ $main-width: 1200px;
                 }
 
                 .client {
-                    margin-top: 44px;
+                    margin-top: 50px;
                     display: flex;
 
                     div {
 
-                        height: 32px;
-                        margin-right: 28px;
+                        height: 36px;
+                        margin-right: 32px;
                         display: flex;
                         justify-content: center;
                         align-items: center;
 
                         img {
-                            width: 32px;
-                            margin-right: 11px;
+                            width: 36px;
+                            margin-right: 12px;
                         }
 
                         span {
-                            height: 21px;
-                            font-size: 18px;
+                            height: 29px;
+                            font-size: 20px;
                             font-family: Source Han Sans CN-Regular, Source Han Sans CN;
                             font-weight: 400;
                             color: #2F3133;
-                            line-height: 21px;
+                            line-height: 29px;
                         }
                     }
                 }
@@ -1836,6 +1854,6 @@ $main-width: 1200px;
 
     }
 }
-</style>
 
+</style>
 
